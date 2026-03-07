@@ -8,10 +8,9 @@
        :info "docs"
        :load-path "lisp/"
        :compile "lisp/"
-       ;; Use the Makefile to produce the info manual, el-get can
-       ;; handle compilation and autoloads on its own.
-       :build `(("make" ,(format "EMACS=%s" el-get-emacs) "info"))
-       :build/berkeley-unix `(("gmake" ,(format "EMACS=%s" el-get-emacs)
-                               "info"))
+       ;; Build info directly: transient's Makefile uses `sed -i -e`
+       ;; (GNU syntax) which fails on macOS/BSD sed.
+       ;; See https://github.com/magit/transient/pull/428
+       :build (("makeinfo" "--no-split" "docs/transient.texi" "-o" "docs/transient.info"))
        ;; Assume windows lacks a build environment.
        :build/windows-nt (with-temp-file "lisp/transient-autoloads.el" nil))
